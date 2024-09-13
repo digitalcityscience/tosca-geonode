@@ -111,8 +111,7 @@ services:
     #   data-dir-conf:
     #     condition: service_healthy
       # django:
-      #   condition: service_healthy
-
+      #   condition: service_healthyy
   data-dir-conf:
     # image: geonode/geoserver_data:2.24.4-latest
     image: geoserver-2.24.4-tosca-data:latest
