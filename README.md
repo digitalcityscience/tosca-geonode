@@ -1,5 +1,21 @@
 # DCS Data Catalog
 
+This repository contains some of the core 3rd party dependencies for the DSC Tosca project. 
+ - geonode
+ - geoserver
+ - geoserver-data
+
+The 3rd party dependencies are being adjusted, configured and extended to meet the requirements of the DSC Tosca project. They are being packaged as docker images and published to the Github Container Registry.
+
+## Workflow
+The images are being built and published to the Github Container Registry using Github Actions. The workflow is defined in the `.github/workflows` directory.
+
+### Geonode
+
+### Geoserver
+
+### Geoserver Data
+
 docker compose -f docker-compose-dev.yml build --no-cache
 docker compose -f docker-compose-dev.yml up -d
 
