@@ -22,9 +22,10 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
+  GEOSERVER_IMAGE_NAME: ${{ github.repository_owner}}/geoserver_data
 
 jobs:
-  build:
+  geoserver_data:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -67,7 +68,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@96383f45573cb7f253c731d3b3ab81c87ef81934 # v5.0.0
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ env.GEOSERVER_IMAGE_NAME }}
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
