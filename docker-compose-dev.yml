@@ -111,8 +111,7 @@ services:
     #   data-dir-conf:
     #     condition: service_healthy
       # django:
-      #   condition: service_healthy
-
+      #   condition: service_healthyy
   data-dir-conf:
     # image: geonode/geoserver_data:2.24.4-latest
     image: geoserver-2.24.4-tosca-data:latest
@@ -139,8 +138,8 @@ services:
     healthcheck:
       test: "pg_isready -d postgres -U postgres"
     # uncomment to enable remote connections to postgres
-    ports:
-      - "5436:5432"
+    # ports:
+    #   - "5436:5432"
 
   # Vanilla RabbitMQ service. This is needed by celery
   rabbitmq:
