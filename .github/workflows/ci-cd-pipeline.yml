@@ -36,3 +36,10 @@ jobs:
     with:
       image_name: ${{ github.repository_owner}}/geoserver
       working_dir: tosca-geoserver/geoserver
+
+  geonode:
+    uses: ./.github/workflows/docker-build-and-publish.yml
+    with:
+      image_name: ${{ github.repository_owner}}/geonode
+      working_dir: .
+      docker_file: Dockerfile.tosca
