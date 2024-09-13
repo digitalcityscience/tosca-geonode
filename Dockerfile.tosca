@@ -1,8 +1,8 @@
 FROM geonode/geonode-base:latest-ubuntu-22.04
 LABEL GeoNode development team
 
-# Clone the specific branch of the tosca-geonode repository
-RUN git clone -b tosca-web-init https://github.com/orttak/tosca-geonode.git --depth=1 /usr/src/geonode/
+# copy local geonode src inside container
+COPY . /usr/src/geonode/
 
 WORKDIR /usr/src/geonode
 
