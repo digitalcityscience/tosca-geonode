@@ -12,6 +12,9 @@ on:
       docker_file:
         type: string
         default: Dockerfile
+    secrets:
+      GITHUB_TOKEN:
+        required: true
 
 env:
   # Uses docker.io for Docker Hub if empty

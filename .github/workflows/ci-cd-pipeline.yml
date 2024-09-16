@@ -14,7 +14,7 @@ on:
     tags: ["v*.*.*"]
   pull_request:
     branches: ["main"]
-  workflow_dispatch: 
+  workflow_dispatch:
 
 env:
   # Use docker.io for Docker Hub if empty
@@ -28,12 +28,16 @@ jobs:
     with:
       image_name: ${{ github.repository_owner}}/geoserver_data
       working_dir: tosca-geoserver/geoserver_data
+    secrets:
+      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
   geoserver:
     uses: ./.github/workflows/docker-build-and-publish.yml
     with:
       image_name: ${{ github.repository_owner}}/geoserver
       working_dir: tosca-geoserver/geoserver
+    secrets:
+      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
 
   geonode:
     uses: ./.github/workflows/docker-build-and-publish.yml
@@ -41,3 +45,5 @@ jobs:
       image_name: ${{ github.repository_owner}}/geonode
       working_dir: .
       docker_file: Dockerfile.tosca
+    secrets:
+      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
