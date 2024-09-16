@@ -21,7 +21,6 @@ env:
   REGISTRY: ghcr.io
   # github.repository as <account>/<repo>
   IMAGE_NAME: ${{ github.repository }}
-  GEOSERVER_IMAGE_NAME: ${{ github.repository_owner}}/geoserver
 
 jobs:
   geoserver_data:
