@@ -1,0 +1,44 @@
+name: CI/CD pipeline
+
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+on:
+  schedule:
+    - cron: "42 8 * * *"
+  push:
+    branches: ["main"]
+    # Publish semver tags as releases.
+    tags: ["v*.*.*"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch: 
+
+env:
+  # Use docker.io for Docker Hub if empty
+  REGISTRY: ghcr.io
+  # github.repository as <account>/<repo>
+  IMAGE_NAME: ${{ github.repository }}
+  GEOSERVER_IMAGE_NAME: ${{ github.repository_owner}}/geoserver
+
+jobs:
+  geoserver_data:
+    uses: ./.github/workflows/docker-build-and-publish.yml
+    with:
+      image_name: ${{ github.repository_owner}}/geoserver_data
+      working_dir: tosca-geoserver/geoserver_data
+
+  geoserver:
+    uses: ./.github/workflows/docker-build-and-publish.yml
+    with:
+      image_name: ${{ github.repository_owner}}/geoserver
+      working_dir: tosca-geoserver/geoserver
+
+  geonode:
+    uses: ./.github/workflows/docker-build-and-publish.yml
+    with:
+      image_name: ${{ github.repository_owner}}/geonode
+      working_dir: .
+      docker_file: Dockerfile.tosca
