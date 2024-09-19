@@ -123,7 +123,7 @@ class GeoJSONField(serializers.Field):
         
 class FormSerializer(serializers.ModelSerializer):
     feedback_location = GeoJSONField()  # Handle GeoJSON input/output for location
-    feedback_geometry = GeoJSONField(required=False)  # Handle GeoJSON for geometry
+    # feedback_geometry = GeoJSONField(required=False)  # Handle GeoJSON for geometry
     campaign_id = serializers.IntegerField(write_only=True)  # Accept campaign_id from the request
     campaign = serializers.PrimaryKeyRelatedField(queryset=Campaign.objects.all(), required=False)  # Make the campaign field optional
 
