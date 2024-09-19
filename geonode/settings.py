@@ -67,6 +67,9 @@ DEBUG_STATIC = ast.literal_eval(os.getenv("DEBUG_STATIC", "False"))
 
 FORCE_SCRIPT_NAME = os.getenv("FORCE_SCRIPT_NAME", "")
 
+
+# BASE_URL="http://localhost:8000"
+
 # Define email service on GeoNode
 EMAIL_ENABLE = ast.literal_eval(os.getenv("EMAIL_ENABLE", "False"))
 
@@ -507,6 +510,9 @@ INSTALLED_APPS = (
     "allauth.socialaccount",
     # GeoNode
     "geonode",
+    "cpt",
+    #3th party apps by tosca
+    'django_jsonform',
 )
 
 markdown_white_listed_tags = [
@@ -846,7 +852,8 @@ if SESSION_EXPIRED_CONTROL_ENABLED:
 SESSION_COOKIE_SECURE = ast.literal_eval(os.environ.get("SESSION_COOKIE_SECURE", "False"))
 CSRF_COOKIE_SECURE = ast.literal_eval(os.environ.get("CSRF_COOKIE_SECURE", "False"))
 CSRF_COOKIE_HTTPONLY = ast.literal_eval(os.environ.get("CSRF_COOKIE_HTTPONLY", "False"))
-CORS_ALLOW_ALL_ORIGINS = ast.literal_eval(os.environ.get("CORS_ALLOW_ALL_ORIGINS", "False"))
+# CORS_ALLOW_ALL_ORIGINS = ast.literal_eval(os.environ.get("CORS_ALLOW_ALL_ORIGINS", "False"))
+CORS_ALLOW_ALL_ORIGINS=True
 X_FRAME_OPTIONS = os.environ.get("X_FRAME_OPTIONS", "DENY")
 SECURE_CONTENT_TYPE_NOSNIFF = ast.literal_eval(os.environ.get("SECURE_CONTENT_TYPE_NOSNIFF", "True"))
 SECURE_BROWSER_XSS_FILTER = ast.literal_eval(os.environ.get("SECURE_BROWSER_XSS_FILTER", "True"))
@@ -857,7 +864,7 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = ast.literal_eval(os.environ.get("SECURE_HSTS_IN
 # Replacement of the default authentication backend in order to support
 # permissions per object.
 AUTHENTICATION_BACKENDS = (
-    # 'oauth2_provider.backends.OAuth2Backend',
+    'oauth2_provider.backends.OAuth2Backend',
     "django.contrib.auth.backends.ModelBackend",
     "guardian.backends.ObjectPermissionBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
@@ -1250,7 +1257,6 @@ except ValueError:
 # If you need to limit 'api' REST calls to only some specific IPs
 # fill the list like below:
 #
-# AUTH_IP_WHITELIST = ['192.168.1.158', '192.168.1.159']
 AUTH_IP_WHITELIST = (
     [HOSTNAME, "localhost", "django", "geonode"]
     if os.getenv("AUTH_IP_WHITELIST") is None

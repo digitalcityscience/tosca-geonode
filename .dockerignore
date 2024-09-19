@@ -5,5 +5,8 @@ geonode/static/node_modules
 docs
 .coverage
 .celerybeat-*
-
+.env
 scripts/spcgeonode/_volume_*
+
+// Tosca specific
+tosca-geoserver/
