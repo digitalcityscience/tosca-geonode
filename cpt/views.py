@@ -68,7 +68,7 @@ class CTPFeedbackViewSet(viewsets.ViewSet):
 
     def create(self, request, *args, **kwargs):
         data_type = request.data.get('type')
-
+        print(request.data.get('feedback'))
         if data_type == 'POST1':
             # Only rating
             serializer = RatingSerializer(data=request.data.get('rating'))
