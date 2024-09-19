@@ -48,6 +48,7 @@ class CampaignAdmin(admin.ModelAdmin):
 
 
 class FormProxy(Form):
+    #extend the Form model to include the campaign name
     class Meta:
         proxy = True
         verbose_name = 'Feedback Details'
