@@ -131,7 +131,7 @@ urlpatterns += [
     re_path(r"^api/v2/", include("geonode.assets.urls")),
     re_path(r"", include(api.urls)),
     ### cpt
-    path('api/v2/', include('cpt.urls')),
+    path("api/v2/", include("cpt.urls")),
 ]
 print(base_urlpatterns, oidc_urlpatterns, oauth2_app_name)
 # tinymce WYSIWYG HTML Editor

@@ -1,10 +1,11 @@
-from rest_framework import viewsets,mixins, status
+from rest_framework import viewsets, mixins, status
 from rest_framework.decorators import action
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 from rest_framework.exceptions import NotFound
-#add below for authentication and permissions.
+
+# add below for authentication and permissions.
 # from rest_framework.permissions import IsAuthenticatedOrReadOnly
 # from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 # from oauth2_provider.contrib.rest_framework import OAuth2Authentication
@@ -15,7 +16,7 @@ from django.shortcuts import get_object_or_404
 from cpt.models import Campaign, Form, Rating
 
 from cpt.models import Campaign, Form, Rating
-from cpt.serializers import CampaignSerializer,CampaignsListSerializer,FormSerializer, RatingSerializer
+from cpt.serializers import CampaignSerializer, CampaignsListSerializer, FormSerializer, RatingSerializer
 
 
 class CampaignViewSet(viewsets.ModelViewSet):
@@ -23,21 +24,22 @@ class CampaignViewSet(viewsets.ModelViewSet):
     # nice to have : campaign liste nokta verisi ekleyebilirsek campaign list yaparken ekranda toplam nokta sayısını gösterebiliriz.
 
     CampaignCountViewSet buraya alacaz
-    
+
     """
+
     queryset = Campaign.objects.all()
-    http_method_names = ['get', 'head', 'options']
+    http_method_names = ["get", "head", "options"]
 
     def get_queryset(self):
         now = timezone.now()
         return Campaign.objects.filter(end_date__gt=now, start_date__lte=now)
-    
+
     def get_serializer_class(self):
-        if self.action == 'list':
+        if self.action == "list":
             return CampaignsListSerializer
         return CampaignSerializer
 
-    @action(detail=False, methods=['get'], url_path='(?P<campaign_url_name>[^/.]+)')
+    @action(detail=False, methods=["get"], url_path="(?P<campaign_url_name>[^/.]+)")
     def get_by_url_name(self, request, campaign_url_name=None):
         try:
             campaign = Campaign.objects.get(campaign_url_name=campaign_url_name)
@@ -45,6 +47,7 @@ class CampaignViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         except Campaign.DoesNotExist:
             raise NotFound(f"Campaign with URL name {campaign_url_name} not found")
+
 
 class CTPFeedbackViewSet(viewsets.ViewSet):
 
@@ -59,51 +62,50 @@ class CTPFeedbackViewSet(viewsets.ViewSet):
         """
         Return the appropriate serializer class based on the request data.
         """
-        data_type = self.request.data.get('type')
-        if data_type == 'POST1':
+        data_type = self.request.data.get("type")
+        if data_type == "POST1":
             return RatingSerializer
-        elif data_type in ['POST2', 'POST3']:
+        elif data_type in ["POST2", "POST3"]:
             return FormSerializer
         raise ValidationError({"error": "Invalid type provided, cannot determine serializer."})
 
     def create(self, request, *args, **kwargs):
-        data_type = request.data.get('type')
-        print(request.data.get('feedback'))
-        if data_type == 'POST1':
+        data_type = request.data.get("type")
+        # print(request.data.get('feedback'))
+        if data_type == "POST1":
             # Only rating
-            serializer = RatingSerializer(data=request.data.get('rating'))
+            serializer = RatingSerializer(data=request.data.get("rating"))
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        elif data_type == 'POST2':
+        elif data_type == "POST2":
             # Only feedback
-            feedback_data = request.data.get('feedback')
+            feedback_data = request.data.get("feedback")
             serializer = FormSerializer(data=feedback_data)
             if serializer.is_valid():
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        elif data_type == 'POST3':
+        elif data_type == "POST3":
             # Feedback + rating
-            feedback_data = request.data.get('feedback')
-            rating_data = request.data.get('rating')
+            feedback_data = request.data.get("feedback")
+            rating_data = request.data.get("rating")
 
             # Save feedback first
             feedback_serializer = FormSerializer(data=feedback_data)
             if feedback_serializer.is_valid():
                 feedback_obj = feedback_serializer.save()
-
                 # Save rating with reference to the feedback
-                rating_data['form'] = feedback_obj.id
+                rating_data["form"] = feedback_obj.id
                 rating_serializer = RatingSerializer(data=rating_data)
                 if rating_serializer.is_valid():
                     rating_serializer.save()
                     return Response(
                         {"feedback": feedback_serializer.data, "rating": rating_serializer.data},
-                        status=status.HTTP_201_CREATED
+                        status=status.HTTP_201_CREATED,
                     )
                 return Response(rating_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             return Response(feedback_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -121,7 +123,7 @@ class CTPFeedbackViewSet(viewsets.ViewSet):
             "rating": {
                 "campaign_id": 1,
                 "rating": 3,
-            }
+            },
         }
         post2_structure = {
             "type": "POST2",
@@ -130,8 +132,8 @@ class CTPFeedbackViewSet(viewsets.ViewSet):
                 "feedback_location": "Point",  # example: "POINT(1.0 1.0)"
                 "feedback_text": "Your feedback here",
                 "feedback_category": "general",
-                "feedback_geometry": "GeoJSON string"
-            }
+                "feedback_geometry": "GeoJSON string",
+            },
         }
         post3_structure = {
             "type": "POST3",
@@ -144,16 +146,20 @@ class CTPFeedbackViewSet(viewsets.ViewSet):
                 "feedback_location": "Point",  # example: "POINT(1.0 1.0)"
                 "feedback_text": "Your feedback here",
                 "feedback_category": "general",
-                "feedback_geometry": "GeoJSON string"
-            }
+                "feedback_geometry": "GeoJSON string",
+            },
         }
-        return Response({
-            "UPDATA DOCSSSSSS!!!!!!!!!!!": "This endpoint is used to provide feedback and ratings for campaigns.",
-            "POST1": post1_structure,
-            "POST2": post2_structure,
-            "POST3": post3_structure
-        }, status=status.HTTP_200_OK)
-    
+        return Response(
+            {
+                "UPDATA DOCSSSSSS!!!!!!!!!!!": "This endpoint is used to provide feedback and ratings for campaigns.",
+                "POST1": post1_structure,
+                "POST2": post2_structure,
+                "POST3": post3_structure,
+            },
+            status=status.HTTP_200_OK,
+        )
+
+
 """
 class CampaignCountViewSet(viewsets.ViewSet):
     # We will check and delete this viewset later
